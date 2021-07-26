@@ -1,0 +1,113 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+dataset=pd.read_csv(r'C:\Users\Acer\Desktop\rows.csv')
+dataset
+type(dataset)
+dataset.head()
+dataset.tail()
+dataset.shape
+dataset.shape[0]
+dataset.shape[1]
+dataset.columns
+duplicate=dataset.iloc[:,1:29].duplicated()
+dataset.iloc[:,1:29][duplicate]
+dataset.info()
+dataset.isnull().sum()
+dataset.nunique()
+dataset.iloc[:,1:35].boxplot(rot=90,fontsize=10,figsize=(10, 10))
+plt.xlabel("Data")
+plt.ylabel("Values")
+plt.title("Plot showing Outliers")
+dataset.describe(include=['O'])
+dataset.describe(exclude=['O'])
+correlation=dataset.corr()
+correlation
+fig = plt.figure(figsize=(11,11))
+sns.heatmap(correlation,cmap='BuPu',annot=True)
+plt.title('Correlation Plot')
+group = dataset.groupby(['YEAR']).size()
+group
+year=dataset[(dataset.YEAR ==2010 ) & (dataset.LocationDesc=='California')]
+year
+dataset['Education'].value_counts().sort_index()
+plt.figure(figsize = (10,8))
+
+plt.hist(dataset['TopicDesc'],bins=14,color='green')
+plt.xlabel('Topic Description' ,color = 'black', fontsize=16)
+plt.ylabel('Count' ,color = 'black', fontsize=16 )
+plt.title('Total number of reports of Topic Description' ,color = 'black', fontsize=16)
+plt.xticks(fontsize=12)
+plt.yticks(fontsize=12)
+plt.show()
+dataset['Race'].value_counts().plot(kind='bar' ,figsize=(10, 8),rot='50',color='orange')
+plt.xlabel("Race", color = 'black' , fontsize = 14)
+plt.ylabel("Count",  color = 'black' , fontsize = 14)
+plt.title("Race vs Counts" , color = 'black' , fontsize = 16)
+
+plt.xticks(fontsize=12)
+plt.yticks(fontsize=12)
+plt.show()
+educ= dataset['Education']
+measD=dataset['MeasureDesc']
+plt.plot(educ,measD,'o',alpha=0.5)
+plt.xlabel('Education' ,color = 'black', fontsize=16)
+plt.ylabel('Description Of Measure' ,color = 'black', fontsize=16)
+plt.title('Description of measure vs Education',color = 'black', fontsize=16)
+
+plt.xticks(fontsize=12)
+plt.yticks(fontsize=12)
+plt.show()
+plt.figure(figsize = (10,8))
+
+sns.kdeplot(dataset['Data_Value'])
+plt.xlabel('Data Value',color = 'black', fontsize=14)
+plt.ylabel('Density',color = 'black', fontsize=14)
+plt.title('Density Estimation on Data Value',color = 'black', fontsize=16)
+plt.show()
+plt.figure(figsize = (10,8))
+
+sns.kdeplot(dataset['Sample_Size'])
+plt.xlabel('Sample Size',color = 'black', fontsize=14)
+plt.ylabel('Density',color = 'black', fontsize=14)
+plt.title('Density Estimation on Sample Size',color = 'black', fontsize=16)
+plt.show()
+plt.figure(figsize =(10, 8))
+sns.boxplot(x='YEAR',y='MeasureDesc',data=dataset,whis=10 )
+plt.title('Year vs Description of Measure' ,color = 'black', fontsize=16)
+plt.xticks(fontsize=12)
+plt.yticks(fontsize=12)
+plt.show()
+plt.figure(figsize =(10,10))
+sns.boxplot(x='YEAR',y='Response',data=dataset,whis=10)
+plt.title('Year vs Response' ,color = 'black', fontsize=16)
+plt.xticks(fontsize=12)
+plt.yticks(fontsize=12)
+plt.show()
+dataset.Gender.value_counts()
+dataset.Gender.value_counts().plot(kind='pie',title='Gender',
+                                      autopct='%1.1f%%',labels= ['Overall', 'Male' ,'Female' ],
+                                   colors = ['lightskyblue', 'red', 'gold'],
+                                      ylabel=" " , figsize=(10, 10),shadow=True)
+
+plt.show()
+dataset.Race.value_counts().plot(kind='pie',title='Race',
+                                 colors = ['lightskyblue', 'red', 'blue', 'green', 'gold','pink'],
+                                      autopct='%1.1f%%',
+                                      ylabel=" " , figsize=(10, 10),shadow=True)
+
+plt.show()
+dataset.Education.value_counts().plot(kind='pie',title='Education',
+                                      colors = ['lightskyblue', 'red', 'green', 'gold'],
+                                      autopct='%1.1f%%',
+                                      ylabel=" " , figsize=(10, 10),shadow=True)
+
+plt.show()
+dataset.Response.value_counts().plot(kind='pie',title='Response',
+                                      autopct='%1.1f%%',
+                                      ylabel=" " , figsize=(10, 10),shadow=True)
+
+plt.show()
+dataset['LocationDesc'].value_counts()
+dataset['TopicDesc'].value_counts()
