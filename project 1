@@ -1,0 +1,98 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+dataset=pd.read_csv(r'C:\Users\Acer\Desktop\rows.csv')
+dataset
+to_drop = ['TopicType' ,
+           'TopicId' ,
+           'DataSource',
+           'Data_Value_Unit',
+           'TopicTypeId',
+           'MeasureId',
+           'StratificationID1',
+           'StratificationID2' ,
+           'StratificationID3' ,
+           'StratificationID4',
+           'Data_Value_Footnote_Symbol' ,
+           'Data_Value_Footnote',
+           'Data_Value_Std_Err' ,
+           'Low_Confidence_Limit' ,
+           'High_Confidence_Limit',
+          'GeoLocation']
+
+dataset.drop(to_drop, inplace=True, axis=1)
+dataset
+new_names =  {'Unnamed: 0': 'Year',
+              'LocationAbbr': 'Postal_code',
+              'LocationDesc': 'State',
+              'TopicDesc': 'Subject_matter',
+              'MeasureDesc': 'Status',
+              'Response': 'Consumption'}
+dataset.rename(columns=new_names, inplace=True)
+dataset
+duplicate=dataset.iloc[:,1:14].duplicated()
+dataset.iloc[:,1:14][duplicate]
+dataset.isnull().sum()
+dataset.describe(include=['O'])
+dataset.describe(exclude=['O'])
+num = ['YEAR',
+        'Data_Value',
+        'Sample_Size']
+        missing_num = -1
+dataset[num] = dataset[num].fillna(missing_num)
+dataset["Consumption"].fillna('Missing Values', inplace = True)
+dataset
+dataset.isnull().sum()
+dataset.describe(include=['O'])
+dataset.describe(exclude=['O'])
+dataset.iloc[:,:14].boxplot(rot=90,fontsize=10,figsize=(10, 10))
+plt.xlabel("Data")
+plt.ylabel("Values")
+plt.title("Plot showing Outliers")
+def remove_outlier(Sample_Size):
+    sorted(Sample_Size)
+    Q1 = np.quantile(dataset['Sample_Size'],0.25)
+    Q3 = np.quantile(dataset['Sample_Size'],0.75)
+    IQR=Q3-Q1
+    lower_range=Q1-(1.5 * IQR)
+    upper_range=Q3+(1.5 * IQR)
+    return lower_range, upper_range
+    low_sample_size,up_sample_size=remove_outlier(dataset['Sample_Size'])
+dataset['Sample_Size']=np.where(dataset['Sample_Size']>up_sample_size,up_sample_size,dataset['Sample_Size'])
+dataset['Sample_Size']=np.where(dataset['Sample_Size']<low_sample_size,low_sample_size,dataset['Sample_Size'])
+dataset.boxplot(column=['Sample_Size'])
+plt.show()
+gender_data = dataset[dataset['Gender'].isin(['Male' , 'Female' ])]
+gender_data
+fig = plt.figure(figsize=(10,10))
+sns.countplot(data=gender_data, x='Gender')
+plt.title("Tobacco Consumtion By Gender")
+chn = dataset[dataset['Consumption'].isin(['Current','Former','Never','Every Day','> 25 Cigarettes'])]
+chn
+fig = plt.figure(figsize=(10,10))
+sns.countplot(x='Consumption',data=chn);
+plt.title('Count of Tobacco Consumers')
+age_data = dataset[dataset['Age'].isin(['Age 25 and Older','Age 20 and Older',
+'18 to 24 Years', '65 Years and Older','25 to 44 Years','45 to 64 Years','18 to 44 Years' ])]
+age_data
+fig = plt.figure(figsize=(12,12))
+sns.countplot(data=age_data, x='Age')
+plt.title('Age Group Count')
+dataset.State.value_counts().plot(kind='pie',title='State',
+                                      autopct='%1.1f%%',
+                                
+                                      ylabel=" " , figsize=(15, 15),shadow=True)
+
+plt.show()
+state_data = dataset[dataset['State'].isin(['California','Utah','Puerto Rico','Virgin Islands','Guam','National Median (States and DC)'])]
+state_data
+fig = plt.figure(figsize=(12,12))
+sns.countplot(data=state_data, x='State')
+plt.title('State Count')
+race_data = dataset[dataset['Race'].isin(['African American','White','Asian/Pacific Islander','Hispanic','American Indian/Alaska Native'])]
+race_data
+fig = plt.figure(figsize=(12,12))
+sns.countplot(data=race_data, x='Race')
+plt.title('Race Count')
+
